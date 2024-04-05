@@ -1,16 +1,24 @@
 {
-  "name": "fastify_app",
+  "name": "fastify-prisma",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "start": "nodemon index.js"
+      "dev": "tsnd --respawn --transpile-only --exit-child src/app.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "fastify": "^4.26.2",
-    "nodemon": "^3.1.0"
+      "@fastify/jwt": "^8.0.0",
+      "@prisma/client": "^5.11.0",
+      "fastify": "^4.26.2",
+      "fastify-swagger": "^5.2.0",
+      "fastify-zod": "^1.4.0",
+      "ts-node-dev": "^2.0.0",
+      "zod": "^3.22.4",
+      "zod-to-json-schema": "^3.22.5"
+  },
+  "devDependencies": {
+      "@types/node": "^20.12.2",
+      "prettier": "^3.2.5",
+      "typescript": "^5.4.3"
   }
 }
