@@ -3,7 +3,46 @@ import { createUserInput, LoginInput } from "./user.schema";
 import { createUser, findUserByEmail, findUsers } from "./user.service"
 import { verifyPassword } from "../../utils/hash";
 import { server } from "../../app";
-import prisma from "../../utils/prisma";
+import { FastifyInstance } from 'fastify';
+import { $ref } from './user.schema';
+
+
+// router
+async function userRoutes(server: FastifyInstance) {
+  server.post(
+      '/',
+      {
+          schema: {
+              body: $ref('createUserSchema'),
+              response: {
+                  201: $ref('createUserResponseSchema'),
+              },
+          },
+      },
+      registerUserHandler
+  );
+
+  server.post(
+      '/login',
+      {
+          schema: {
+              body: $ref('loginSchema'),
+              response: {
+                  200: $ref('loginResponseSchema'),
+              },
+          },
+      },
+      loginHandler
+  ),
+
+  server.get('/', {
+      preHandler: [server.authenticate]
+  }, getUsersHandler);
+}
+
+export default userRoutes;
+
+// controller routes
 
 export async function registerUserHandler(
   request: FastifyRequest<{
@@ -55,11 +94,7 @@ export async function loginHandler(request: FastifyRequest<{
 }
 
 export async function getUsersHandler() {
-  return prisma.user.findMany({
-  select: {
-      id: true,
-      email: true,
-      name: true,
-    }
- } )
+  const users = await findUsers()
+  return users
 }
+
