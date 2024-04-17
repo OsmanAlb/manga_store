@@ -42,7 +42,7 @@ async function userRoutes(server: FastifyInstance) {
 
 export default userRoutes;
 
-// controller routes
+// controller
 
 export async function registerUserHandler(
   request: FastifyRequest<{
@@ -95,6 +95,7 @@ export async function loginHandler(request: FastifyRequest<{
 
 export async function getUsersHandler() {
   const users = await findUsers()
+  console.log(users)
   return users
 }
 

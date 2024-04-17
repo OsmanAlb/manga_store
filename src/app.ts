@@ -2,13 +2,17 @@ import Fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import userRoutes from './modules/user/user.controller';
 import { userSchemas } from './modules/user/user.schema';
 import fjwt, { JWT } from '@fastify/jwt';
+import { comicsSchemas } from './modules/comics/comics.schema';
+import comicsRoutes from './modules/comics/comics.controller';
+import * as dotenv from 'dotenv';
+import { authorSchemas } from './modules/authors/author.schema';
+import authorRoutes from './modules/authors/author.controller';
+dotenv.config()
+// console.log(dotenv.config().parsed)
 
 export const server = Fastify();
 
 declare module "fastify" {
-    // interface FastifyRequest {
-    //     jwt: JWT
-    // }
     export interface FastifyInstance {
         authenticate: any
     }
@@ -25,8 +29,9 @@ declare module "@fastify/jwt" {
 }
 
 server.register(fjwt, {
-    secret: 'secret_access_token_secret',
-});
+    secret: process.env.SECRET
+}); // здесь какая то ошибка, мол данные могут undefined, но я точно знаю что там не будет undefined 
+// console.log(process.env.SECRET)
 
 server.decorate(
     'authenticate',
@@ -43,11 +48,13 @@ server.get('/', async function (request, response) {
 });
 
 async function main() {
-    for (const schema of userSchemas) {
+    for (const schema of [ ...userSchemas, ...comicsSchemas, ...authorSchemas ]) {
         server.addSchema(schema);
     }
 
     server.register(userRoutes, { prefix: 'api/users' });
+    server.register(comicsRoutes, {prefix: 'api/comics'})
+    server.register(authorRoutes, {prefix: 'api/author'});
 
     try {
         await server.listen(3000, '0.0.0.0');
@@ -59,3 +66,8 @@ async function main() {
 }
 
 main();
+
+server.register(require('fastify-mongodb'), {
+    url: 'mongodb+srv://OsmanAlb:azazazA9@cluster0.b3kf6kr.mongodb.net/'
+})
+

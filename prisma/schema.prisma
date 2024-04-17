@@ -19,4 +19,27 @@ model User {
   name String?
   password String
   salt String
+  // comics Comics[]
 }
+model Author {
+  id Int @id @default(autoincrement())
+  name String?
+  birthplace String?
+  twitter String?
+  // comics Comics[] // в теории это поле должно связывать автора с его комиксами
+}
+
+model Comics {
+  id Int @id @default(autoincrement()) //Это поле id с типом данных Int. Директива @id указывает, что это первичный ключ. @default(autoincrement()) означает, что Prisma автоматически увеличивает значение этого поля при создании нового комикса.
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  title String @db.VarChar(255)
+  description String? // знак вопроса означает что поле может быть null 
+  pages Int
+  // author User @relation(fields: [authorId], references: [id])
+  // authorId Int
+}
+
+
+
+
