@@ -4,7 +4,7 @@ import { z } from "zod";
 const comicsInput = {
     title: z.string(),
     pages: z.number(),
-    description: z.string()
+    description: z.string().optional()
     // возможно ещё какие-то поля, но я хз
 }
 
@@ -32,5 +32,5 @@ export const { schemas: comicsSchemas, $ref } = buildJsonSchemas({
     comicResponseSchema,
     comicsResponseSchema,
 }, {
-    $id: 'secondShema'
+    $id: 'fourthSchema'
 })

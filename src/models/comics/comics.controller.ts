@@ -1,6 +1,7 @@
 // здесь короче будет реализован crud с помощью которого можно будет создать, редактировать, обновлять и удалять комикс
 
-import { FastifyInstance, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+
 import { CreateComicsInput, $ref } from './comics.schema'
 import { createComicBook, getComics } from "./comics.service";
 // route 
@@ -16,8 +17,7 @@ async function comicsRoutes(server: FastifyInstance) {
             }
         }
     },
-        createComicsHandler
-    )
+        createComicsHandler )
     server.get('/', {
         schema: {
             response: {
@@ -25,29 +25,30 @@ async function comicsRoutes(server: FastifyInstance) {
             }
         }
     },
-        getComicsHandler)
+        getComicsHandler )
 }
 
 export default comicsRoutes
 
 // создание комикса 
 
-export async function createComicsHandler(
+//  А что я хочу чтобы мой код выполнял??
+// Я хочу прописать связь "один ко многим" то есть от одного автора выдаётся массив его книг
+
+async function createComicsHandler(
     request: FastifyRequest<{
         Body: CreateComicsInput
-    }>
+    }>,
+    reply: FastifyReply
 ) {
-    const comicBook = await createComicBook({
+    const comics = await createComicBook({
         ...request.body,
-        // authorId: request.user.id
-    })
-    console.log('New book was created', comicBook)
-    return comicBook
+        ownerId: request.user.id,
+    }) 
+    return comics
 }
 
-// доступ к комиксу по id ( get method )
-
-export async function getComicsHandler() {
+async function getComicsHandler() {
     const comics = await getComics()
     return comics
 }
