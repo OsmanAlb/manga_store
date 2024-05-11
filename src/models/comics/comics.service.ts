@@ -17,6 +17,9 @@ export function getComics() {
             title: true,
             pages: true,
             id: true,
+            author: true,
+            comic_book_cover: true,
+            comic_book_pdf: true,
             createdAt: true,
             updatedAt: true,
             owner: {
@@ -28,3 +31,16 @@ export function getComics() {
         }
     })
 }
+
+export function getComicsImg(id: string) {
+    console.log(id)
+    return prisma.comic.findUnique({
+        where: {
+            id: parseInt(id, 10)
+        },
+        select: {
+            comic_book_cover: true,
+        }
+    })
+}
+

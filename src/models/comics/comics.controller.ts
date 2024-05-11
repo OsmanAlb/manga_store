@@ -3,7 +3,13 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { CreateComicsInput, $ref } from './comics.schema'
-import { createComicBook, getComics } from "./comics.service";
+import { createComicBook, getComics, getComicsImg } from "./comics.service";
+// import {v2 as cloudinary} from "cloudinary"
+import fs from 'fs'
+import util from 'util'
+import { pipeline } from 'stream'
+
+const pump = util.promisify(pipeline)
 // route 
 
 async function comicsRoutes(server: FastifyInstance) {
@@ -26,6 +32,7 @@ async function comicsRoutes(server: FastifyInstance) {
         }
     },
         getComicsHandler )
+    server.get<{ Params: { id: string } }>('/:id', {}, getComicsImgHandler)
 }
 
 export default comicsRoutes
@@ -43,12 +50,31 @@ async function createComicsHandler(
 ) {
     const comics = await createComicBook({
         ...request.body,
-        ownerId: request.user.id,
+        ownerId: request.admin.id,
     }) 
-    return comics
+
+    // const parts = request.files()
+    //  for await (const part of parts) {
+    //     await pump(part.file, fs.createWriteStream(`./upload/${part.filename}`))
+    // }
+
+    return comics // && { message: 'file uploaded successfully'}
 }
 
 async function getComicsHandler() {
     const comics = await getComics()
     return comics
+}
+
+async function getComicsImgHandler(
+    request: FastifyRequest<{
+        Params: {
+            id: string
+        }
+    }>,
+    reply: FastifyReply
+) {
+    const { id } = request.params
+    const comicsImg = await getComicsImg(id)
+    return comicsImg
 }

@@ -22,31 +22,24 @@ model User {
 }
 
 model Admin {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
   name     String
   password String
   salt     String
   comics   Comic[]
-  author   Author[]
 }
 
 model Comic {
-  id          Int      @id @default(autoincrement()) //Это поле id с типом данных Int. Директива @id указывает, что это первичный ключ. @default(autoincrement()) означает, что Prisma автоматически увеличивает значение этого поля при создании нового комикса.
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  title       String   @db.VarChar(255)
-  description String? // знак вопроса означает что поле может быть null 
-  pages       Int
-  owner       Admin    @relation(fields: [ownerId], references: [id])
-  ownerId     Int
-}
-
-model Author {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  owner     Admin    @relation(fields: [ownerId], references: [id])
-  ownerId   Int
+  id               Int      @id  @default(autoincrement())//Это поле id с типом данных Int. Директива @id указывает, что это первичный ключ. @default(autoincrement()) означает, что Prisma автоматически увеличивает значение этого поля при создании нового комикса.
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  title            String   @db.VarChar(255)
+  description      String? // знак вопроса означает что поле может быть null 
+  pages            Int
+  author           String
+  comic_book_cover String? // здесь должна быть ссылка на обложку
+  comic_book_pdf   String? // здесь должна быть ссылка на pdf книги, ибо делать многостраниц я ебал, поэтому будет так
+  owner            Admin    @relation(fields: [ownerId], references: [id])
+  ownerId          Int
 }

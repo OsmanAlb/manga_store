@@ -21,7 +21,7 @@ export async function createAuthorHandler(
 	try {
 		const author = await createAuthor({
 			...request.body,
-			ownerId: request.user.id,
+			ownerId: request.admin.id,
 		})
 		reply.code(201).send(author)
 	} catch (e) {

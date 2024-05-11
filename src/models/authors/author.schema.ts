@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const authorInput = {
 	name: z.string(),// возможно я ещё какие-то поля добавлю
+	id: z.number()
 }
 
 const createAuthorSchema = z.object({ 
@@ -10,7 +11,6 @@ const createAuthorSchema = z.object({
  });
 
 const authorGenerated = {
-	id: z.number(),
 	createdAt: z.string(),
     updatedAt: z.string()
 }

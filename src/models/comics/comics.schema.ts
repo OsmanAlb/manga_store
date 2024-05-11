@@ -4,7 +4,10 @@ import { z } from "zod";
 const comicsInput = {
     title: z.string(),
     pages: z.number(),
-    description: z.string().optional()
+    description: z.string().optional(),
+    author: z.string(),
+    comic_book_cover: z.string().url(),
+    comic_book_pdf: z.string()
     // возможно ещё какие-то поля, но я хз
 }
 

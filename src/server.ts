@@ -9,6 +9,7 @@ import { userSchemas } from "./models/user/user.schema";
 import * as dotenv from 'dotenv'
 import authorRoutes from "./models/authors/author.controller";
 import { authorSchemas } from "./models/authors/author.schema";
+import multipart from "@fastify/multipart"
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -21,7 +22,7 @@ declare module "fastify" {
 
 declare module "@fastify/jwt" {
   interface FastifyJWT {
-    user: {
+    admin: {
       id: number;
       email: string;
       name: string;
@@ -50,7 +51,7 @@ function buildServer() {
     }
   );
 
-  server.get("/healthcheck", async function () {
+  server.get("/", async function () {
     return { status: "OK" };
   });
 
@@ -67,6 +68,8 @@ function buildServer() {
   server.register(userRoutes, { prefix: "api/users" });
   server.register(comicsRoutes, { prefix: "api/comics" });
   server.register(authorRoutes, { prefix: "api/author" });
+
+  server.register(multipart)
 
   return server;
 }
