@@ -43,3 +43,13 @@ model Comic {
   owner            Admin    @relation(fields: [ownerId], references: [id])
   ownerId          Int
 }
+
+model Author {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner     Admin    @relation(fields: [ownerId], references: [id])
+  ownerId   Int
+}
+
